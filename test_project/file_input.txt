@@ -1,0 +1,10 @@
+aggiungi_ricetta torta uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+aggiungi_ricetta pizza uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+aggiungi_ricetta insalata uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+aggiungi_ricetta pesce uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+aggiungi_ricetta carne uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+aggiungi_ricetta funghi uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
+rimuovi_ricetta pesce
+rifornimento farina 10 9 uova 3 5 pollo 4 2
+rifornimento cereali 9 3 uova 7 3 pollo 8 1
+rifornimento farina 10 5 uova 3 2 pollo 4 1
