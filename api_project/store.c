@@ -128,8 +128,7 @@ void print_batch(){
     printf("-------------------\n\n");
 }
 
-void print_store()
-{
+void print_store(){
     printf("\nTabella Store\n-------------------\n");
     for (int i = 0; i < TABLE_SIZE; i++){
         if (store[i]){

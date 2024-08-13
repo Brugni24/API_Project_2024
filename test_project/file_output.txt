@@ -1,3 +1,5 @@
+Periodo corriere: 50
+Quantità corriere: 6
 aggiunta
 aggiunta
 aggiunta

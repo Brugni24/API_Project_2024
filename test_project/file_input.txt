@@ -1,3 +1,4 @@
+50 6
 aggiungi_ricetta torta uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
 aggiungi_ricetta pizza uova 5 farina 100 pomodoro 10 miele 5 zucchero 100
 aggiungi_ricetta insalata uova 5 farina 100 pomodoro 10 miele 5 zucchero 100

@@ -1,6 +1,6 @@
 /*  
     COMANDI PER ESECUZIONE E COMPILAZIONE:
-    Compilazione: gcc -Wall -Werror -std=gnu11 -O2 -lm main.c recipe.c store.c utils.c  -o program
+    Compilazione: gcc -Wall -Werror -std=gnu11 -O2 -lm main.c recipe.c store.c order.c utils.c  -o program
     Esecuzione: ./program < file_input.txt > file_output.txt
 */
 
@@ -9,12 +9,15 @@
 #include <stdlib.h>
 #include "recipe.h"
 #include "store.h"
+#include "order.h"
 #include "utils.h"
+
+struct Recipes* tb_recipe = NULL;
 
 int main(){
     //* Lettura comandi
     char comando[MAX_LEN];
-    struct Recipes* tb_recipe = create_table_recipes();
+    tb_recipe = create_table_recipes();
     create_store(); // alloca memoria per il vettore di puntatori
 
     while(scanf("%s", comando) > 0){
@@ -28,8 +31,8 @@ int main(){
                 if(strcmp(comando, "rifornimento") == 0){
                     rifornimento();
                 }else{
-                    if(strcmp(comando, "ordine")==0){
-                        printf("Comando: %s\n", comando);
+                    if(strcmp(comando, "ordine") == 0){
+                        ordine(tb_recipe);
                     }else{
                         printf("Comando non riconosciuto.\n");
                     }
