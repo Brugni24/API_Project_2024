@@ -1,12 +1,23 @@
-Periodo corriere: 50
-Quantità corriere: 6
+Periodo corriere: 5
+Quantità corriere: 325
 aggiunta
 aggiunta
 aggiunta
-aggiunta
-aggiunta
-aggiunta
+non presente
+rifornito
+rifornito
+rifornito
+rifornito
+rifornito
+rifornito
+load_truck
+accettato
+accettato
 rimossa
+aggiunta
+accettato
+load_truck
+accettato
 rifornito
 rifornito
 rifornito
@@ -16,31 +27,8 @@ rifornito
 rifornito
 rifornito
 rifornito
-
-Tabella Ricette
--------------------
-Index: 21426, Key: -1986845870, Value: insalata
-Index: 22174, Key: 255172174, Value: carne
-Index: 35747, Key: 270885747, Value: pizza
-Index: 36143, Key: 275836143, Value: torta
-Index: 37878, Key: -28279418, Value: funghi
--------------------
-
-
-Tabella Store
--------------------
-Index: 3104, Key: 2090803104, Name: uova, Quantity:13
-Index: 7994, Key: -1134159302, Name: cereali, Quantity:9
-Index: 15574, Key: -51851722, Name: farina, Quantity:20
-Index: 35675, Key: 271085675, Name: pollo, Quantity:16
--------------------
-
-
-Tabella Store
--------------------
-Name: uova -> 3 2 -> 7 3 -> 3 5 
-Name: cereali -> 9 3 
-Name: farina -> 10 5 -> 10 9 
-Name: pollo -> 8 1 -> 4 1 -> 4 2 
--------------------
-
+rifornito
+accettato
+rifiutato
+load_truck
+load_truck
