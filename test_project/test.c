@@ -44,8 +44,10 @@ struct Order{
 //* ISTANZE GLOBALI
 struct Recipe** recipe_book = NULL; // Tabella hash per la raccolta delle ricette
 struct Goods** store = NULL; // Tabella hash che rappresenta il magazzino: array di puntatori che punta alla merce (ingredienti) presente in magazzino
-struct Order* prepared_orders = NULL; // Ordini pronti ad essere spediti
-struct Order* pending_orders = NULL; // Ordini in attesa di ricevere gli ingredienti
+struct Order* prepared_orders_head = NULL; // Ordini pronti ad essere spediti
+struct Order* prepared_orders_tail = NULL;
+struct Order* pending_orders_head = NULL; // Ordini in attesa di ricevere gli ingredienti
+struct Order* pending_orders_tail = NULL;
 
 //* DEFINIZIONE FUNZIONI GENERALI
 unsigned int key_function(char *name){ // Algoritmo DJB2
@@ -345,7 +347,96 @@ void rifornimento(){
     }
 }
 
+//* FUNZIONI DI GESTIONE DEGLI ORDINI
+/**
+ * TODO: 
+ * */
 
+struct Order* create_order(int arrival_time, char* recipe, int quantity){
+    struct Order* new_order = (struct Order*)malloc(sizeof(struct Order));
+    new_order->arrival_time = arrival_time;
+    strcpy(new_order->recipe, recipe);
+    new_order->quantity = quantity;
+    new_order->next = NULL;
+    return new_order;
+}
+
+void insert_head_order(struct Order* head, struct Order* tail, int arrival_time, char* recipe, int quantity){
+    struct Order* new_order = create_order(arrival_time, recipe, quantity);
+    if(head == NULL){ // lista vuota
+        head = new_order;
+        tail = new_order;
+    }else{ // aggiungi in testa
+        new_order->next = head->next;
+        head->next = new_order;
+    }
+}
+
+void delete_batch_head(int goods_index){
+    struct Batch* current = store[goods_index]->batches_head;
+    store[goods_index]->batches_head = current->next;
+    free(current);
+}
+
+void remove_batch(int goods_index, int total_quantity_needed){
+    while(total_quantity_needed > 0){
+        total_quantity_needed -= store[goods_index]->batches_head->quantity;
+        if(total_quantity_needed >= 0){ // mi servono altri batch
+            delete_batch_head(goods_index);
+        }else{ // devo sottrare la quantità dell'ingrediente usato dalla batch in testa
+            store[goods_index]->batches_head->quantity -= total_quantity_needed;
+        }
+    }
+}
+
+void delete_expired_batch(int goods_index){
+    while(store[goods_index]->batches_head->expiration < time){
+        delete_batch_head(goods_index);
+    }
+}
+
+void order_management(char* name, int quantity){ // ha il compito di capire se ci sono gli ingredienti per preparare l'ordine, oppure deve essere messo in attesa
+    int recipe_index = search_recipe(name);
+    int goods_index = 0;
+    int total_quantity_needed = 0;
+    int j = 0;
+    for(int i = 0; i < TABLE_SIZE && j == 0; i++){
+        if(recipe_book[recipe_index]->ingredients[i] != NULL){
+            goods_index = search_goods(recipe_book[recipe_index]->ingredients[i]->name); // indice ingrediente nel magazzino
+            delete_expired_batch(store[goods_index]->batches_head);
+            total_quantity_needed = recipe_book[recipe_index]->ingredients[i]->quantity*quantity;
+            if(total_quantity_needed > store[goods_index]->total_quantity){
+                j == 1;
+            }
+        }
+    }
+    if(j == 0){ // ingredienti necessari presenti
+        insert_head_order(prepared_orders_head, prepared_orders_tail, time, name, quantity);
+        // eliminare ingredienti usati
+        for(int i = 0; i < TABLE_SIZE; i++){ // scorro gli ingredienti della ricetta
+            goods_index = search_goods(recipe_book[recipe_index]->ingredients[i]->name);
+            remove_batch(goods_index, total_quantity_needed);
+        }
+    }else{
+        insert_head_order(pending_orders_head, pending_orders_tail, time, name, quantity);
+    }
+}
+
+void ordine(){ // legge nome della ricetta e la quantità da preparare
+    char name[MAX_LEN];
+    int quantity = 0;
+    if(scanf("%s", name) > 0 ){ // leggo il nome della ricetta dell'ordine
+        if(search_recipe(name) == -1){ // la ricetta non è presente
+            printf("rifiutato\n");
+            return;
+        }else{ // la ricetta è presente
+            if(scanf("%d", &quantity) > 0){
+                order_management(name, quantity);
+                printf("accettato\n");
+            }
+        }
+    }
+}
 
 //* FUNZIONI PER DEBUGGING
 void print_ingredients_table(struct Ingredient** tb_ingredients){
@@ -414,31 +505,29 @@ int main(){
 
     //* Lettura comandi
     char comando[MAX_LEN];
-    create_recipe_book();
-    create_store();
+    create_recipe_book(); // creo ricettario
+    create_store(); // creo magazzino
 
     while(scanf("%s", comando) > 0){
-        // Determino il comando
         if(strcmp(comando, "aggiungi_ricetta") == 0){
             read_recipe(recipe_book);
+            time++;
         }else{
             if(strcmp(comando, "rimuovi_ricetta") == 0){
                 remove_recipe(recipe_book);
+                time++;
             }else{
                 if(strcmp(comando, "rifornimento") == 0){
                     rifornimento();
+                    time++;
                 }else{
-                    if(strcmp(comando, "ordine")==0){
-                        printf("Comando: %s\n", comando);
-                    }else{
-                        printf("Comando non riconosciuto.\n");
+                    if(strcmp(comando, "ordine") == 0){
+                        ordine();
+                        time++;
                     }
                 }
             }
         }
     }
-    print_table_recipe(recipe_book);
-    print_store();
-    print_batch();
     return 0;
 }
