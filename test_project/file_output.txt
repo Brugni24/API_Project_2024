@@ -1,34 +1,125 @@
-Periodo corriere: 5
-Quantità corriere: 325
 aggiunta
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+-------------------
+-------------------
+TABELLA ORDINI:
+
+-------------------
+
+-------------------
 aggiunta
-aggiunta
-non presente
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+-------------------
+-------------------
+TABELLA ORDINI:
+
+-------------------
+
+-------------------
 rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-load_truck
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 70
+Lotti: Quantity: 20, Expiration: 10  -  Quantity: 50, Expiration: 10  -  
+Name: farina, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: zucchero, Quantity: 40
+Lotti: Quantity: 40, Expiration: 10  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+
+-------------------
+
+-------------------
 accettato
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 70
+Lotti: Quantity: 50, Expiration: 10  -  
+Name: farina, Quantity: 100
+Lotti: 
+Name: zucchero, Quantity: 40
+Lotti: 
+-------------------
+-------------------
+TABELLA ORDINI:
+Name: torta, Quantity: 2, Time: 4 -> 
+-------------------
+
+-------------------
 accettato
-rimossa
-aggiunta
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 70
+Lotti: Quantity: 50, Expiration: 10  -  
+Name: farina, Quantity: 100
+Lotti: 
+Name: zucchero, Quantity: 40
+Lotti: 
+-------------------
+-------------------
+TABELLA ORDINI:
+Name: torta, Quantity: 2, Time: 4 -> 
+-------------------
+Name: torta, Quantity: 4, Time: 5 -> 
+-------------------
+Camioncino: 4 torta 2
 accettato
-load_truck
-accettato
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-rifornito
-accettato
-rifiutato
-load_truck
-load_truck
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 70
+Lotti: Quantity: 50, Expiration: 10  -  
+Name: farina, Quantity: 100
+Lotti: 
+Name: zucchero, Quantity: 40
+Lotti: 
+-------------------
+-------------------
+TABELLA ORDINI:
+
+-------------------
+Name: ciambella, Quantity: 2, Time: 6 -> Name: torta, Quantity: 4, Time: 5 -> 
+-------------------
