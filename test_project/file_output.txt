@@ -9,9 +9,8 @@ TABELLA MAGAZZINO:
 -------------------
 -------------------
 TABELLA ORDINI:
-
--------------------
-
+Ordini pronti: 
+Ordini in attesa: 
 -------------------
 aggiunta
 -------------------
@@ -26,9 +25,44 @@ TABELLA MAGAZZINO:
 -------------------
 -------------------
 TABELLA ORDINI:
-
+Ordini pronti: 
+Ordini in attesa: 
 -------------------
-
+aggiunta
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: 
+Ordini in attesa: 
+-------------------
+non presente
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: 
+Ordini in attesa: 
 -------------------
 rifornito
 -------------------
@@ -37,21 +71,59 @@ Name: torta
 Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
 Name: ciambella
 Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 70
-Lotti: Quantity: 20, Expiration: 10  -  Quantity: 50, Expiration: 10  -  
+Name: uova, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: burro, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
 Name: farina, Quantity: 100
 Lotti: Quantity: 100, Expiration: 10  -  
-Name: zucchero, Quantity: 40
-Lotti: Quantity: 40, Expiration: 10  -  
+Name: cioccolato, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: zucchero, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: latte, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-
+Ordini pronti: 
+Ordini in attesa: 
 -------------------
-
+camioncino vuoto
+accettato
+-------------------
+TABELLA RICETTE:
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: burro, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: farina, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: cioccolato, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: zucchero, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: latte, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> 
 -------------------
 accettato
 -------------------
@@ -60,66 +132,285 @@ Name: torta
 Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
 Name: ciambella
 Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 70
-Lotti: Quantity: 50, Expiration: 10  -  
-Name: farina, Quantity: 100
-Lotti: 
-Name: zucchero, Quantity: 40
-Lotti: 
+Name: uova, Quantity: 94
+Lotti: Quantity: 94, Expiration: 10  -  
+Name: burro, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: farina, Quantity: 70
+Lotti: Quantity: 70, Expiration: 10  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Name: torta, Quantity: 2, Time: 4 -> 
+Ordini pronti: Name: profiterole, Quantity: 3, Time: 6 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> 
 -------------------
-
--------------------
-accettato
+ordini in sospeso
 -------------------
 TABELLA RICETTE:
 Name: torta
 Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
 Name: ciambella
 Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 70
-Lotti: Quantity: 50, Expiration: 10  -  
-Name: farina, Quantity: 100
-Lotti: 
-Name: zucchero, Quantity: 40
-Lotti: 
+Name: uova, Quantity: 94
+Lotti: Quantity: 94, Expiration: 10  -  
+Name: burro, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: farina, Quantity: 70
+Lotti: Quantity: 70, Expiration: 10  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Name: torta, Quantity: 2, Time: 4 -> 
+Ordini pronti: Name: profiterole, Quantity: 3, Time: 6 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> 
 -------------------
-Name: torta, Quantity: 4, Time: 5 -> 
--------------------
-Camioncino: 4 torta 2
-accettato
+aggiunta
 -------------------
 TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
 Name: torta
 Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
 Name: ciambella
 Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 70
-Lotti: Quantity: 50, Expiration: 10  -  
-Name: farina, Quantity: 100
-Lotti: 
-Name: zucchero, Quantity: 40
-Lotti: 
+Name: uova, Quantity: 94
+Lotti: Quantity: 94, Expiration: 10  -  
+Name: burro, Quantity: 100
+Lotti: Quantity: 100, Expiration: 10  -  
+Name: farina, Quantity: 70
+Lotti: Quantity: 70, Expiration: 10  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-
+Ordini pronti: Name: profiterole, Quantity: 3, Time: 6 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> 
 -------------------
-Name: ciambella, Quantity: 2, Time: 6 -> Name: torta, Quantity: 4, Time: 5 -> 
+accettato
 -------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 79
+Lotti: Quantity: 79, Expiration: 10  -  
+Name: burro, Quantity: 94
+Lotti: Quantity: 94, Expiration: 10  -  
+Name: farina, Quantity: 10
+Lotti: Quantity: 10, Expiration: 10  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: profiterole, Quantity: 3, Time: 6 -> Name: ciambella, Quantity: 3, Time: 9 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> 
+-------------------
+9 ciambella 3
+6 profiterole 3
+accettato
+-------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 0
+Lotti: 
+Name: burro, Quantity: 94
+Lotti: Quantity: 94, Expiration: 10  -  
+Name: farina, Quantity: 10
+Lotti: Quantity: 10, Expiration: 10  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+-------------------
+rifornito
+-------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 35
+Lotti: Quantity: 35, Expiration: 20  -  
+Name: burro, Quantity: 15
+Lotti: Quantity: 15, Expiration: 20  -  
+Name: farina, Quantity: 100
+Lotti: Quantity: 100, Expiration: 15  -  
+Name: cioccolato, Quantity: 88
+Lotti: Quantity: 88, Expiration: 10  -  
+Name: zucchero, Quantity: 0
+Lotti: 
+Name: latte, Quantity: 91
+Lotti: Quantity: 91, Expiration: 10  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+-------------------
+rifornito
+-------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 2
+Lotti: Quantity: 2, Expiration: 20  -  
+Name: burro, Quantity: 3
+Lotti: Quantity: 3, Expiration: 20  -  
+Name: farina, Quantity: 30
+Lotti: Quantity: 30, Expiration: 15  -  
+Name: cioccolato, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+Name: zucchero, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+Name: latte, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+-------------------
+accettato
+-------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 2
+Lotti: Quantity: 2, Expiration: 20  -  
+Name: burro, Quantity: 3
+Lotti: Quantity: 3, Expiration: 20  -  
+Name: farina, Quantity: 30
+Lotti: Quantity: 30, Expiration: 15  -  
+Name: cioccolato, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+Name: zucchero, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+Name: latte, Quantity: 5
+Lotti: Quantity: 5, Expiration: 15  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> 
+-------------------
+accettato
+-------------------
+TABELLA RICETTE:
+Name: pane_dolce
+Ingredienti: uova, 1  -  farina, 1  -  zucchero, 1  -  
+Name: torta
+Ingredienti: uova, 10  -  farina, 50  -  zucchero, 20  -  
+Name: ciambella
+Ingredienti: uova, 5  -  burro, 2  -  farina, 20  -  
+Name: profiterole
+Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte, 3  -  
+-------------------
+-------------------
+TABELLA MAGAZZINO:
+Name: uova, Quantity: 0
+Lotti: 
+Name: burro, Quantity: 3
+Lotti: Quantity: 3, Expiration: 20  -  
+Name: farina, Quantity: 20
+Lotti: Quantity: 20, Expiration: 15  -  
+Name: cioccolato, Quantity: 1
+Lotti: Quantity: 1, Expiration: 15  -  
+Name: zucchero, Quantity: 2
+Lotti: Quantity: 2, Expiration: 15  -  
+Name: latte, Quantity: 2
+Lotti: Quantity: 2, Expiration: 15  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> Name: profiterole, Quantity: 1, Time: 14 -> 
+Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> 
+-------------------
+14 profiterole 1
+12 torta 1
+12 ciambella 6
