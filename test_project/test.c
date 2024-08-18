@@ -40,7 +40,6 @@ struct Order{
     struct Order* prev;
 };
 
-
 //* DEFINIZIONE FUNZIONI PER LA GESTIONE DELL'HASHING
 unsigned int key_function(char *name){ // Algoritmo DJB2
     unsigned int k = 5381;
@@ -425,21 +424,6 @@ void prepare_pending_order(struct Recipe** recipe_book, struct Goods** store, st
     }
 }
 
-void delete_order_tail(struct Order** prepared_orders_head, struct Order** prepared_orders_tail){
-    if(*prepared_orders_tail == NULL){
-        return;
-    }
-    struct Order* temp = *prepared_orders_tail;
-    if(*prepared_orders_head == *prepared_orders_tail){
-        *prepared_orders_head = NULL;
-        *prepared_orders_tail = NULL;
-    }else{
-        *prepared_orders_tail = (*prepared_orders_tail)->prev;
-        (*prepared_orders_tail)->next = NULL;
-    }
-    free(temp);
-}
-
 int calculate_total_quantity_order(struct Recipe** recipe_book, char* recipe_name, int order_quantity){
     int total_quantity_order = 0;
     int recipe_index = search_recipe(recipe_book, recipe_name);
@@ -542,21 +526,61 @@ void ordine(struct Recipe** recipe_book, struct Goods** store, struct Order** pr
     }
 }
 
+void load_order_truck(struct Order** head, struct Order** tail, int arrival_time, char* recipe, int quantity, int total_quantity_order, struct Recipe** recipe_book){ // inserimento fatto rispetto al tempo di arrivo dell'ordine
+    struct Order* new_order = create_order(arrival_time, recipe, quantity);
+    
+    if(*head == NULL){ // lista vuota
+        *head = new_order;
+        *tail = new_order;
+    }else{ // aggiungi in ordine di arrivo
+        struct Order* current = *head;
+        int total_quantity_current = calculate_total_quantity_order(recipe_book, (*head)->recipe, (*head)->quantity);
+        while(current != NULL && total_quantity_order < total_quantity_current){
+            current = current->next;
+            total_quantity_current = calculate_total_quantity_order(recipe_book, current->recipe, current->quantity);
+        }
+        
+        if(current == NULL){
+            (*tail)->next = new_order;
+            new_order->prev = *tail;
+            *tail = new_order;
+        }else{
+            if(current == *head){
+                new_order->next = *head;
+                (*head)->prev = new_order;
+                *head = new_order;
+            }else{
+                new_order->next = current;
+                new_order->prev = current->prev;
+                current->prev->next = new_order;
+                current->prev = new_order;
+            }
+        }
+    }
+}
+
 void load_truck(struct Recipe** recipe_book, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, int capacity){
-    int i = 0;
-    while(*prepared_orders_tail != NULL && capacity > 0){
-        int total_quantity_order = calculate_total_quantity_order(recipe_book, (*prepared_orders_tail)->recipe, (*prepared_orders_tail)->quantity);
+    struct Order* truck_head = NULL;
+    struct Order* truck_tail = NULL;
+    int total_quantity_order;
+
+    while(*prepared_orders_head != NULL && capacity > 0){
+        total_quantity_order = calculate_total_quantity_order(recipe_book, (*prepared_orders_head)->recipe, (*prepared_orders_head)->quantity);
         if(total_quantity_order <= capacity){
-            printf("%d %s %d\n", (*prepared_orders_tail)->arrival_time, (*prepared_orders_tail)->recipe, (*prepared_orders_tail)->quantity);
             capacity -= total_quantity_order;
-            delete_order_tail(prepared_orders_head, prepared_orders_tail);
-            i++;
+            load_order_truck(&truck_head, &truck_tail, (*prepared_orders_head)->arrival_time, (*prepared_orders_head)->recipe, (*prepared_orders_head)->quantity, total_quantity_order, recipe_book);
+            delete_order(prepared_orders_head, *prepared_orders_head);
         }else{
             break;
         }
     }
-    if(i == 0){
+    if(truck_head == NULL){
         printf("camioncino vuoto\n");
+    }else{
+        while(truck_head != NULL){
+            printf("%d %s %d\n", truck_head->arrival_time, truck_head->recipe, truck_head->quantity);
+            delete_order(&truck_head, truck_head);
+        }
     }
 }
 
