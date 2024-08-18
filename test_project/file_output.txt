@@ -297,23 +297,23 @@ Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte,
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 35
-Lotti: Quantity: 35, Expiration: 20  -  
-Name: burro, Quantity: 15
+Name: uova, Quantity: 15
 Lotti: Quantity: 15, Expiration: 20  -  
-Name: farina, Quantity: 100
-Lotti: Quantity: 100, Expiration: 15  -  
+Name: burro, Quantity: 3
+Lotti: Quantity: 3, Expiration: 20  -  
+Name: farina, Quantity: 30
+Lotti: Quantity: 30, Expiration: 15  -  
 Name: cioccolato, Quantity: 88
 Lotti: Quantity: 88, Expiration: 10  -  
-Name: zucchero, Quantity: 0
-Lotti: 
+Name: zucchero, Quantity: 20
+Lotti: Quantity: 20, Expiration: 20  -  
 Name: latte, Quantity: 91
 Lotti: Quantity: 91, Expiration: 10  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> 
-Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+Ordini pronti: Name: ciambella, Quantity: 6, Time: 5 -> 
+Ordini in attesa: Name: torta, Quantity: 1, Time: 10 -> 
 -------------------
 rifornito
 -------------------
@@ -329,23 +329,23 @@ Ingredienti: uova, 2  -  farina, 10  -  cioccolato, 4  -  zucchero, 3  -  latte,
 -------------------
 -------------------
 TABELLA MAGAZZINO:
-Name: uova, Quantity: 2
-Lotti: Quantity: 2, Expiration: 20  -  
+Name: uova, Quantity: 12
+Lotti: Quantity: 12, Expiration: 20  -  
 Name: burro, Quantity: 3
 Lotti: Quantity: 3, Expiration: 20  -  
-Name: farina, Quantity: 30
-Lotti: Quantity: 30, Expiration: 15  -  
+Name: farina, Quantity: 80
+Lotti: Quantity: 80, Expiration: 15  -  
 Name: cioccolato, Quantity: 5
 Lotti: Quantity: 5, Expiration: 15  -  
-Name: zucchero, Quantity: 5
-Lotti: Quantity: 5, Expiration: 15  -  
+Name: zucchero, Quantity: 25
+Lotti: Quantity: 5, Expiration: 15  -  Quantity: 20, Expiration: 20  -  
 Name: latte, Quantity: 5
 Lotti: Quantity: 5, Expiration: 15  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> 
-Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+Ordini pronti: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> 
+Ordini in attesa: 
 -------------------
 accettato
 -------------------
@@ -370,14 +370,14 @@ Lotti: Quantity: 30, Expiration: 15  -
 Name: cioccolato, Quantity: 5
 Lotti: Quantity: 5, Expiration: 15  -  
 Name: zucchero, Quantity: 5
-Lotti: Quantity: 5, Expiration: 15  -  
+Lotti: Quantity: 5, Expiration: 20  -  
 Name: latte, Quantity: 5
 Lotti: Quantity: 5, Expiration: 15  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> 
-Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> 
+Ordini pronti: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> 
+Ordini in attesa: 
 -------------------
 accettato
 -------------------
@@ -402,15 +402,15 @@ Lotti: Quantity: 20, Expiration: 15  -
 Name: cioccolato, Quantity: 1
 Lotti: Quantity: 1, Expiration: 15  -  
 Name: zucchero, Quantity: 2
-Lotti: Quantity: 2, Expiration: 15  -  
+Lotti: Quantity: 2, Expiration: 20  -  
 Name: latte, Quantity: 2
 Lotti: Quantity: 2, Expiration: 15  -  
 -------------------
 -------------------
 TABELLA ORDINI:
-Ordini pronti: Name: torta, Quantity: 1, Time: 11 -> Name: ciambella, Quantity: 6, Time: 12 -> Name: torta, Quantity: 1, Time: 12 -> Name: profiterole, Quantity: 1, Time: 14 -> 
-Ordini in attesa: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> 
+Ordini pronti: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> Name: profiterole, Quantity: 1, Time: 14 -> 
+Ordini in attesa: 
 -------------------
 14 profiterole 1
-12 torta 1
-12 ciambella 6
+13 torta 1
+10 torta 1

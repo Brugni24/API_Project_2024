@@ -312,7 +312,7 @@ struct Order* create_order(int arrival_time, char* recipe, int quantity){
     return new_order;
 }
 
-void insert_order(struct Order** head, struct Order** tail, int arrival_time, char* recipe, int quantity){
+void insert_order(struct Order** head, struct Order** tail, int arrival_time, char* recipe, int quantity){ // inserimento fatto rispetto al tempo di arrivo dell'ordine
     struct Order* new_order = create_order(arrival_time, recipe, quantity);
     if(*head == NULL){ // lista vuota
         *head = new_order;
@@ -340,6 +340,26 @@ void insert_order(struct Order** head, struct Order** tail, int arrival_time, ch
             }
         }
     }
+}
+
+void delete_order(struct Order** head, struct Order* order_to_delete){
+    if(*head == NULL || order_to_delete == NULL){ // se la testa o l'ordine da eliminare sono NULL
+        return;
+    }
+
+    if(*head == order_to_delete){ // se devo eliminare la testa
+        *head = order_to_delete->next;
+    }
+
+    if(order_to_delete->prev != NULL){ // se il nodo da eliminare ha un predecessore
+        order_to_delete->prev->next = order_to_delete->next;
+    }
+
+    if(order_to_delete->next != NULL){  // se il nodo da eliminare ha un successore
+        order_to_delete->next->prev = order_to_delete->prev;
+    }
+
+    free(order_to_delete);
 }
 
 int search_recipe_orders(struct Order* head, char* name){
@@ -373,9 +393,9 @@ int check_ingredients_availability(struct Recipe** recipe_book, struct Goods** s
     return 1;
 }
 
-void order_preparation(struct Recipe** recipe_book, struct Goods** store, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, char* name, int quantity, int time){
+void order_preparation(struct Recipe** recipe_book, struct Goods** store, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, char* name, int quantity, int time, int arrival_time){
     if(check_ingredients_availability(recipe_book, store, name, quantity, time)){ // ci sono ingredienti a sufficienza per preparare l'ordine
-        insert_order(prepared_orders_head, prepared_orders_tail, time, name, quantity);
+        insert_order(prepared_orders_head, prepared_orders_tail, arrival_time, name, quantity);
         // eliminare ingredienti usati
         int recipe_index = search_recipe(recipe_book, name);
         int goods_index = 0;
@@ -389,17 +409,19 @@ void order_preparation(struct Recipe** recipe_book, struct Goods** store, struct
             }
         }
     }else{
-        insert_order(pending_orders_head, pending_orders_tail, time, name, quantity);
+        insert_order(pending_orders_head, pending_orders_tail, arrival_time, name, quantity);
     }
 }
 
 void prepare_pending_order(struct Recipe** recipe_book, struct Goods** store, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, int time){
-    struct Order* current = *pending_orders_tail;
-    while(current != NULL){
+    struct Order* current = *pending_orders_head;
+    while(current != NULL){ // scorro la lista dalla testa per trovare il più vecchio ordine che posso evadere
         if(check_ingredients_availability(recipe_book, store, current->recipe, current->quantity, time)){
-            order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, current->recipe, current->quantity, time);
+            order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, current->recipe, current->quantity, time, current->arrival_time);
+            // cancellare l'ordine che è stato evaso dalla lista degli ordini in attesa
+            delete_order(pending_orders_head, current);
         }
-        current = current->prev;
+        current = current->next;
     }
 }
 
@@ -513,7 +535,7 @@ void ordine(struct Recipe** recipe_book, struct Goods** store, struct Order** pr
             return;
         }else{ // la ricetta è presente
             if(scanf("%d", &quantity) > 0){
-                order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, name, quantity, time);
+                order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, name, quantity, time, time);
                 printf("accettato\n");
             }
         }
