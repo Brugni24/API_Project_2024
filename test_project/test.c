@@ -436,6 +436,38 @@ int calculate_total_quantity_order(struct Recipe** recipe_book, char* recipe_nam
     return total_quantity_order;
 }
 
+void load_order_truck(struct Order** head, struct Order** tail, int arrival_time, char* recipe, int quantity, int total_quantity_order, struct Recipe** recipe_book){ // inserimento fatto rispetto al tempo di arrivo dell'ordine
+    struct Order* new_order = create_order(arrival_time, recipe, quantity);
+    
+    if(*head == NULL){ // lista vuota
+        *head = new_order;
+        *tail = new_order;
+    }else{ // aggiungi in ordine di arrivo
+        struct Order* current = *head;
+        while(current != NULL && total_quantity_order <= calculate_total_quantity_order(recipe_book, current->recipe, current->quantity)){
+            current = current->next;
+        }
+        
+        if(current == NULL){
+            (*tail)->next = new_order;
+            new_order->prev = *tail;
+            *tail = new_order;
+        }else{
+            if(current == *head){
+                new_order->next = *head;
+                (*head)->prev = new_order;
+                *head = new_order;
+            }else{
+                new_order->next = current;
+                new_order->prev = current->prev;
+                current->prev->next = new_order;
+                current->prev = new_order;
+            }
+        }
+    }
+}
+
+
 //* FUNZIONI STRUTTURALI
 void read_recipe(struct Recipe** recipe_book){
     struct Ingredient** tb_ingredients = create_ingredients_table();
@@ -521,39 +553,6 @@ void ordine(struct Recipe** recipe_book, struct Goods** store, struct Order** pr
             if(scanf("%d", &quantity) > 0){
                 order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, name, quantity, time, time);
                 printf("accettato\n");
-            }
-        }
-    }
-}
-
-void load_order_truck(struct Order** head, struct Order** tail, int arrival_time, char* recipe, int quantity, int total_quantity_order, struct Recipe** recipe_book){ // inserimento fatto rispetto al tempo di arrivo dell'ordine
-    struct Order* new_order = create_order(arrival_time, recipe, quantity);
-    
-    if(*head == NULL){ // lista vuota
-        *head = new_order;
-        *tail = new_order;
-    }else{ // aggiungi in ordine di arrivo
-        struct Order* current = *head;
-        int total_quantity_current = calculate_total_quantity_order(recipe_book, (*head)->recipe, (*head)->quantity);
-        while(current != NULL && total_quantity_order < total_quantity_current){
-            current = current->next;
-            total_quantity_current = calculate_total_quantity_order(recipe_book, current->recipe, current->quantity);
-        }
-        
-        if(current == NULL){
-            (*tail)->next = new_order;
-            new_order->prev = *tail;
-            *tail = new_order;
-        }else{
-            if(current == *head){
-                new_order->next = *head;
-                (*head)->prev = new_order;
-                *head = new_order;
-            }else{
-                new_order->next = current;
-                new_order->prev = current->prev;
-                current->prev->next = new_order;
-                current->prev = new_order;
             }
         }
     }

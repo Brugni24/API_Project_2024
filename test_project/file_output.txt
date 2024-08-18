@@ -402,4 +402,15 @@ Lotti: Quantity: 20, Expiration: 15  -
 Name: cioccolato, Quantity: 1
 Lotti: Quantity: 1, Expiration: 15  -  
 Name: zucchero, Quantity: 2
-Lotti: Quan
+Lotti: Quantity: 2, Expiration: 20  -  
+Name: latte, Quantity: 2
+Lotti: Quantity: 2, Expiration: 15  -  
+-------------------
+-------------------
+TABELLA ORDINI:
+Ordini pronti: Name: ciambella, Quantity: 6, Time: 5 -> Name: torta, Quantity: 1, Time: 10 -> Name: torta, Quantity: 1, Time: 13 -> Name: profiterole, Quantity: 1, Time: 14 -> 
+Ordini in attesa: 
+-------------------
+5 ciambella 6
+10 torta 1
+13 torta 1
