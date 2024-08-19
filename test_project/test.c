@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 #define MAX_LEN 256
-#define TABLE_SIZE 50000
-#define PRIME 49999 // numero primo per la funzione hash 2
+#define TABLE_SIZE 10000
+#define PRIME 9973 // numero primo per la funzione hash 2
 
 int recipe_counter = 0;
 
