@@ -10,15 +10,15 @@ int recipe_counter = 0;
 
 //* DEFINIZIONE STRUTTURE DATI
 struct Ingredient{
-    int key;
     char name[MAX_LEN];
     int quantity;
+    struct Ingredient* next;
 };
 
 struct Recipe{
     int key;
     char name[MAX_LEN];
-    struct Ingredient** ingredients;
+    struct Ingredient* ingredients_head;
 };
 
 struct Batch{ // lotti
@@ -59,80 +59,70 @@ unsigned int double_hashing(char* name, int i){return (hash_function(name) + i*h
 //* FUNZIONI DI GESTIONE DEGLI INGREDIENTI
 struct Ingredient* create_ingredient(char* name, int quantity){
     struct Ingredient* ingredient = (struct Ingredient*)malloc(sizeof(struct Ingredient)); // Alloca la memoria per il puntatore ad un nuovo ingrediente
-    ingredient->key = key_function(name);
+    
+    // controllo se l'allocazione di memoria è andata a buon fine
+    if (ingredient == NULL) {
+        // Gestione dell'errore di allocazione della memoria
+        printf("Errore: allocazione della memoria fallita\n");
+        exit(EXIT_FAILURE);
+    }
+
     strcpy(ingredient->name, name);
     ingredient->quantity = quantity;
+    ingredient->next = NULL;
+    
     return ingredient;
 }
 
-struct Ingredient** create_ingredients_table(){
-    struct Ingredient** tb_ingredients = (struct Ingredient**)calloc(TABLE_SIZE, sizeof(struct Ingredient*)); // alloca spazio per le celle della tabella
-    for (int i = 0; i < TABLE_SIZE; i++){
-        tb_ingredients[i] = NULL;
-    }
-    return tb_ingredients;
-}
+struct Ingredient* search_ingredient(struct Ingredient* ingredients_head, char* name){
+    struct Ingredient* current = ingredients_head;
 
-void handle_collision_ingredient(struct Ingredient** tb_ingredients, struct Ingredient* ingredient, int index){
-    int i = 1;
-    while(tb_ingredients[index] != NULL){
-        index = double_hashing(ingredient->name, i);
-        i++;
-    }
-    tb_ingredients[index] = ingredient;
-}
-
-int search_ingredient(struct Ingredient** tb_ingredients, char* name){
-    int index = hash_function(name);
-    struct Ingredient* ingredient = tb_ingredients[index];
-    int i = 0;
-    while(ingredient != NULL){
-        if(strcmp(ingredient->name, name) == 0){
-            return index;
+    while(current != NULL){
+        if(strcmp(current->name, name) == 0){
+            return current;
         }
-        i++;
-        index = double_hashing(name, i);
-        ingredient = tb_ingredients[index];
+        current = current->next;
     }
-    return -1;
+    return NULL;
 }
 
-void insert_ingredient(struct Ingredient** tb_ingredients, char* name, int quantity){
-    int index = search_ingredient(tb_ingredients, name);
-    if(index == -1){ // ingrediente non presente
-        struct Ingredient* ingredient = create_ingredient(name, quantity);
-        index = hash_function(name);
-        struct Ingredient* current = tb_ingredients[index];
+void insert_ingredient(struct Ingredient** ingredients_head, char* name, int quantity){
+    // cerco se l'ingrediente è già presente
+    struct Ingredient* temp = search_ingredient(*ingredients_head, name);
 
-        if (current == NULL){ // Cella vuota
-            tb_ingredients[index] = ingredient;
-        }else{ // Cella occupata --> collisione
-            handle_collision_ingredient(tb_ingredients, ingredient, (index+1));
-            return;
+    if(temp == NULL){ // ingrediente non presente
+        // creo il nodo
+        struct Ingredient* new_ingredient = create_ingredient(name, quantity);
+        
+        if(*ingredients_head == NULL){ // lista vuota
+            *ingredients_head = new_ingredient;
+        }else{ // aggiungo ingrediente in testa
+            new_ingredient->next = *ingredients_head;
+            *ingredients_head = new_ingredient;
         }
-    }else{ // ingrediente già presente
-        tb_ingredients[index]->quantity += quantity;
-        return;
+    }else{ // ingrediente già presente -> aumento la quantità senza aggiungere un nuovo nodo
+        temp->quantity += quantity;
     }
 }
 
-void free_ingredients(struct Ingredient** tb_ingredients){
-    for(int i = 0; i < TABLE_SIZE; i++){
-        if(tb_ingredients[i] != NULL){
-            free(tb_ingredients[i]); 
-        }
+void free_ingredients(struct Ingredient* ingredients_head){
+    struct Ingredient* temp = NULL;
+
+    while(ingredients_head != NULL){
+        temp = ingredients_head;
+        ingredients_head = ingredients_head->next;
+        free(temp);
     }
-    free(tb_ingredients);
 }
 
 
 //* FUNZIONI DI GESTIONE DELLE RICETTE
-struct Recipe* create_recipe(char* name, struct Ingredient** tb_ingredients){
+struct Recipe* create_recipe(char* name, struct Ingredient* ingredients_head){
     struct Recipe* recipe = (struct Recipe*)malloc(sizeof(struct Recipe));
     
     recipe->key = key_function(name);
     strcpy(recipe->name, name);
-    recipe->ingredients = tb_ingredients;
+    recipe->ingredients_head = ingredients_head;
 
     return recipe;
 }
@@ -140,9 +130,11 @@ struct Recipe* create_recipe(char* name, struct Ingredient** tb_ingredients){
 struct Recipe** create_recipe_book(){
     struct Recipe** recipe_book = NULL;
     recipe_book = (struct Recipe**)calloc(TABLE_SIZE, sizeof(struct Recipe*)); // alloca spazio per le celle della tabella
+
     for (int i = 0; i < TABLE_SIZE; i++){
         recipe_book[i] = NULL;
     }
+
     return recipe_book;
 }
 
@@ -155,8 +147,8 @@ void handle_collision_recipe(struct Recipe** recipe_book, struct Recipe* recipe,
     recipe_book[index] = recipe;
 }
 
-void insert_recipe(struct Recipe** recipe_book, char* name, struct Ingredient** tb_ingredients){
-    struct Recipe* recipe = create_recipe(name, tb_ingredients);
+void insert_recipe(struct Recipe** recipe_book, char* name, struct Ingredient* ingredients_head){
+    struct Recipe* recipe = create_recipe(name, ingredients_head);
 
     int index = hash_function(recipe->name);
     struct Recipe* current = recipe_book[index];
@@ -187,7 +179,7 @@ int search_recipe(struct Recipe** recipe_book, char* name){
 }
 
 void free_recipe(struct Recipe* recipe){
-    free_ingredients(recipe->ingredients);
+    free_ingredients(recipe->ingredients_head);
     free(recipe);
 }
 
@@ -195,22 +187,27 @@ void free_recipe(struct Recipe* recipe){
 //* FUNZIONI DI GESTIONE DEL MAGAZZINO E DEI LOTTI
 struct Batch* create_batch(int quantity, int expiration){
     struct Batch* batch = (struct Batch*)malloc(sizeof(struct Batch));
+
     batch->quantity = quantity;
     batch->expiration = expiration;
     batch->next = NULL;
+
     return batch;
 }
 
 struct Goods* create_goods(char* name){
     struct Goods* goods = (struct Goods*)malloc(sizeof(struct Goods));
+
     goods->key = key_function(name);
     strcpy(goods->name, name);
     goods->batches_head = NULL;
+
     return goods;
 }
 
 struct Goods** create_store(){
     struct Goods** store = (struct Goods**)calloc(TABLE_SIZE, sizeof(struct Goods*));
+    
     for (int i = 0; i < TABLE_SIZE; i++){
         store[i] = NULL;
     }
@@ -259,7 +256,9 @@ void delete_expired_batch(struct Goods** store, int goods_index, int time){
 
 void insert_batch(struct Goods** store, char* name, int quantity, int expiration, int time){
     struct Batch* new_batch = create_batch(quantity, expiration);
+
     int index = search_goods(store, name);
+
     delete_expired_batch(store, index, time);
 
     if(store[index]->batches_head == NULL){ // lista vuota
@@ -313,6 +312,7 @@ void remove_batch(struct Goods** store, int goods_index, int total_quantity_need
 //* FUNZIONI DI GESTIONE DEGLI ORDINI
 struct Order* create_order(int arrival_time, char* recipe, int quantity){
     struct Order* new_order = (struct Order*)malloc(sizeof(struct Order));
+
     new_order->arrival_time = arrival_time;
     strcpy(new_order->recipe, recipe);
     new_order->quantity = quantity;
@@ -392,39 +392,47 @@ int search_recipe_orders(struct Order* head, char* name){
 }
 
 int check_ingredients_availability(struct Recipe** recipe_book, struct Goods** store, char* recipe_name, int quantity, int time){
-    struct Recipe* recipe = recipe_book[search_recipe(recipe_book, recipe_name)];
     int goods_index;
     int total_quantity_needed;
-    for (int i = 0; i < TABLE_SIZE; i++){
-        if(recipe->ingredients[i] != NULL){
-            goods_index = search_goods(store, recipe->ingredients[i]->name);
-            if(goods_index == -1){
-                return 0; // ingrediente non trovato nel magazzino
-            }
-            delete_expired_batch(store, goods_index, time); // elimino i lotti scaduti
-            total_quantity_needed = recipe->ingredients[i]->quantity * quantity;
-            if(store[goods_index]->total_quantity < total_quantity_needed){
-                return 0; // scorte insufficienti
-            }
+    struct Ingredient* current_ingredient = recipe_book[search_recipe(recipe_book, recipe_name)]->ingredients_head; // testa della lista di ingredienti della ricetta in oggetto
+    
+    while(current_ingredient != NULL){
+        goods_index = search_goods(store, current_ingredient->name);
+        if(goods_index == -1){ // ingrediente non trovato in magazzino -> non posso procedere con l'ordine e deve essere messo in attesa
+            return 0;
         }
+
+        // elimino i lotti scaduti
+        delete_expired_batch(store, goods_index, time);
+
+        // calcolo la quantità totale necessaria
+        total_quantity_needed = current_ingredient->quantity * quantity;
+
+        if(store[goods_index]->total_quantity < total_quantity_needed){
+            return 0; // scorte insufficienti -> non posso procedere con l'ordine e deve essere messo in attesa
+        }
+        current_ingredient = current_ingredient->next;
     }
-    return 1;
+
+    return 1; // scorte sufficienti -> ordine viene mandato in preparazione
 }
 
 void order_preparation(struct Recipe** recipe_book, struct Goods** store, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, char* name, int quantity, int time, int arrival_time){
     if(check_ingredients_availability(recipe_book, store, name, quantity, time)){ // ci sono ingredienti a sufficienza per preparare l'ordine
         insert_order(prepared_orders_head, prepared_orders_tail, arrival_time, name, quantity);
+
         // eliminare ingredienti usati
         int recipe_index = search_recipe(recipe_book, name);
         int goods_index = 0;
         int total_quantity_needed = 0;
-        for(int i = 0; i < TABLE_SIZE; i++){ // scorro gli ingredienti della ricetta
-            if(recipe_book[recipe_index]->ingredients[i] != NULL){
-                goods_index = search_goods(store, recipe_book[recipe_index]->ingredients[i]->name); // indice ingrediente nel magazzino
-                total_quantity_needed = recipe_book[recipe_index]->ingredients[i]->quantity*quantity;
-                remove_batch(store, goods_index, total_quantity_needed);
-                store[goods_index]->total_quantity -= total_quantity_needed; // aggiorno indice total_quantity
-            }
+        struct Ingredient* current_ingredient = recipe_book[recipe_index]->ingredients_head;
+
+        while(current_ingredient != NULL){
+            goods_index = search_goods(store, current_ingredient->name);
+            total_quantity_needed = current_ingredient->quantity * quantity;
+            remove_batch(store, goods_index, total_quantity_needed);
+            store[goods_index]->total_quantity -= total_quantity_needed; // aggiorno indice total_quantity
+            current_ingredient = current_ingredient->next;
         }
     }else{
         insert_order(pending_orders_head, pending_orders_tail, arrival_time, name, quantity);
@@ -436,6 +444,7 @@ void prepare_pending_order(struct Recipe** recipe_book, struct Goods** store, st
     while(current != NULL){ // scorro la lista dalla testa per trovare il più vecchio ordine che posso evadere
         if(check_ingredients_availability(recipe_book, store, current->recipe, current->quantity, time)){
             order_preparation(recipe_book, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, current->recipe, current->quantity, time, current->arrival_time);
+            
             // cancellare l'ordine che è stato evaso dalla lista degli ordini in attesa
             delete_order(pending_orders_head, pending_orders_tail, current);
         }
@@ -446,12 +455,13 @@ void prepare_pending_order(struct Recipe** recipe_book, struct Goods** store, st
 int calculate_total_quantity_order(struct Recipe** recipe_book, char* recipe_name, int order_quantity){
     int total_quantity_order = 0;
     int recipe_index = search_recipe(recipe_book, recipe_name);
-    struct Ingredient** tb_ingredients = recipe_book[recipe_index]->ingredients;
-    for(int i = 0; i < TABLE_SIZE; i++){
-        if(tb_ingredients[i] != NULL){
-            total_quantity_order += order_quantity * tb_ingredients[i]->quantity;
-        }
+    struct Ingredient* current_ingredient = recipe_book[recipe_index]->ingredients_head;
+
+    while(current_ingredient != NULL){
+        total_quantity_order += order_quantity * current_ingredient->quantity;
+        current_ingredient = current_ingredient->next;
     }
+
     return total_quantity_order;
 }
 
@@ -489,7 +499,7 @@ void load_order_truck(struct Order** head, struct Order** tail, int arrival_time
 
 //* FUNZIONI STRUTTURALI
 void read_recipe(struct Recipe** recipe_book){
-    struct Ingredient** tb_ingredients = create_ingredients_table();
+    struct Ingredient* ingredients_head = NULL;
     char recipe_name[MAX_LEN] = "";
     char name[MAX_LEN] = "";
     int quantity = 0;
@@ -498,7 +508,7 @@ void read_recipe(struct Recipe** recipe_book){
             while(1){ // creo la lista degli ingredienti
                 if (scanf("%s", name) > 0) {
                     if (scanf("%d", &quantity) > 0) {
-                        insert_ingredient(tb_ingredients, name, quantity);
+                        insert_ingredient(&ingredients_head, name, quantity);
                     }
                 } 
                 // Controlla se il prossimo carattere è un newline o EOF
@@ -507,7 +517,7 @@ void read_recipe(struct Recipe** recipe_book){
                     break;
                 }
             }
-            insert_recipe(recipe_book, recipe_name, tb_ingredients);
+            insert_recipe(recipe_book, recipe_name, ingredients_head);
             printf("aggiunta\n");
         }else{
             printf("ignorato\n");
@@ -610,12 +620,12 @@ void load_truck(struct Recipe** recipe_book, struct Order** prepared_orders_head
 }
 
 //* FUNZIONI PER DEBUGGING
-void print_ingredients_table(struct Ingredient** tb_ingredients){
+void print_ingredients_list(struct Ingredient* head){
+    struct Ingredient* current = head;
     printf("Ingredienti: ");
-    for (int i = 0; i < TABLE_SIZE; i++){
-        if (tb_ingredients[i]){
-            printf("%s, %d  -  ", tb_ingredients[i]->name, tb_ingredients[i]->quantity);
-        }
+    while(current != NULL){
+        printf("%s, %d  -  ", current->name, current->quantity);
+        current = current->next;
     }
     printf("\n");
 }
@@ -625,7 +635,7 @@ void print_recipe_book(struct Recipe** recipe_book){
     for (int i = 0; i < TABLE_SIZE; i++){
         if (recipe_book[i]){
             printf("Index: %d, Key: %d, Value: %s\n", i, recipe_book[i]->key, recipe_book[i]->name);
-            print_ingredients_table(recipe_book[i]->ingredients);
+            print_ingredients_list(recipe_book[i]->ingredients_head);
         }
     }
     printf("-------------------\n");
@@ -669,8 +679,8 @@ void print_order(struct Order* prepared_orders_head, struct Order* pending_order
 }
 
 void print_data(struct Recipe** recipe_book, struct Goods** store, struct Order* prepared_orders_head, struct Order* pending_orders_head){
-    // print_recipe_book(recipe_book);
-    // print_store(store);
+    print_recipe_book(recipe_book);
+    print_store(store);
     print_order(prepared_orders_head, pending_orders_head);
 }
 
@@ -708,7 +718,7 @@ int main(){
     //* Lettura comandi
     while(scanf("%s", comando) > 0){
         if(recipe_counter >= TABLE_SIZE*0.75){
-            fprintf(stderr, "Errore: tabella hash sovraccaricata\n");
+            printf("Errore: tabella hash sovraccaricata\n");
             exit(EXIT_FAILURE);
         }
         // printf("%d) Comando: %s  --> ", time, comando);
