@@ -4,11 +4,8 @@
 
 #define MAX_LEN 50
 #define RECIPE_BOOK_SIZE 499979
-#define STORE_SIZE 500
+#define STORE_SIZE 503
 #define STORE_PRIME 499 // numero primo per la funzione hash 2
-
-int recipes_counter = 0;
-int goods_counter = 0;
 
 //! DEFINIZIONE STRUTTURE DATI
 struct Ingredient{
@@ -18,7 +15,6 @@ struct Ingredient{
 };
 
 struct Recipe{
-    int key;
     char name[MAX_LEN];
     struct Ingredient* ingredients_head;
     struct Recipe* next_recipe;
@@ -31,7 +27,6 @@ struct Batch{ // lotti
 };
 
 struct Goods{ // merce presente nel magazzino -> ingredienti
-    int key;
     char name[MAX_LEN];
     int total_quantity;
     struct Batch* batches_head;
@@ -67,13 +62,6 @@ unsigned int double_hashing_S(char* name, int i){return (hash_function_S(name) +
 //! FUNZIONI DI GESTIONE DEGLI INGREDIENTI
 struct Ingredient* create_ingredient(char* name, int quantity){
     struct Ingredient* ingredient = (struct Ingredient*)malloc(sizeof(struct Ingredient)); // Alloca la memoria per il puntatore ad un nuovo ingrediente
-    
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (ingredient == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_ingredient()\n");
-        exit(EXIT_FAILURE);
-    }
 
     strcpy(ingredient->name, name);
     ingredient->quantity = quantity;
@@ -135,14 +123,6 @@ void free_ingredients(struct Ingredient* ingredients_head){
 struct Recipe* create_recipe(char* name, struct Ingredient* ingredients_head){
     struct Recipe* recipe = (struct Recipe*)malloc(sizeof(struct Recipe));
 
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (recipe == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_recipe()\n");
-        exit(EXIT_FAILURE);
-    }
-    
-    recipe->key = key_function(name);
     strcpy(recipe->name, name);
     recipe->ingredients_head = ingredients_head;
     recipe->next_recipe = NULL;
@@ -153,13 +133,6 @@ struct Recipe* create_recipe(char* name, struct Ingredient* ingredients_head){
 struct Recipe** create_recipe_book(){
     struct Recipe** recipe_book = NULL;
     recipe_book = (struct Recipe**)calloc(RECIPE_BOOK_SIZE, sizeof(struct Recipe*)); // alloca spazio per le celle della tabella
-
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (recipe_book == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_recipe_book()\n");
-        exit(EXIT_FAILURE);
-    }
 
     for (int i = 0; i < RECIPE_BOOK_SIZE; i++){
         recipe_book[i] = NULL;
@@ -173,8 +146,6 @@ void insert_recipe(struct Recipe** recipe_book, char* name, struct Ingredient* i
     
     // Calcolo l'indice della ricetta
     int index = hash_function_RB(name);
-
-    recipes_counter++;
 
     if(recipe_book[index] == NULL){ // Cella vuota
         recipe_book[index] = new_recipe;
@@ -264,13 +235,6 @@ void free_recipe_book(struct Recipe** recipe_book){
 struct Batch* create_batch(int quantity, int expiration){
     struct Batch* batch = (struct Batch*)malloc(sizeof(struct Batch));
 
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (batch == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_batch()\n");
-        exit(EXIT_FAILURE);
-    }
-
     batch->quantity = quantity;
     batch->expiration = expiration;
     batch->next = NULL;
@@ -348,15 +312,7 @@ void free_batches(struct Batch* batches_head){
 //! FUNZIONI DI GESTIONE DEL MAGAZZINO
 struct Goods* create_goods(char* name){
     struct Goods* goods = (struct Goods*)malloc(sizeof(struct Goods));
-    
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (goods == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_goods()\n");
-        exit(EXIT_FAILURE);
-    }
 
-    goods->key = key_function(name);
     strcpy(goods->name, name);
     goods->total_quantity = 0;
     goods->batches_head = NULL;
@@ -366,13 +322,6 @@ struct Goods* create_goods(char* name){
 
 struct Goods** create_store(){
     struct Goods** store = (struct Goods**)calloc(STORE_SIZE, sizeof(struct Goods*));
-    
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (store == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_batch()\n");
-        exit(EXIT_FAILURE);
-    }
 
     for (int i = 0; i < STORE_SIZE; i++){
         store[i] = NULL;
@@ -411,8 +360,6 @@ void insert_goods(struct Goods** store, char* name, int quantity, int expiration
     // Controllo se la merce è già presente
     if(goods_index == -1){ // merce non presente -> creo un nuovo elemento
         struct Goods* goods = create_goods(name);
-
-        goods_counter++; // incremento contatore
 
         int i = hash_function_S(name);
 
@@ -465,13 +412,6 @@ void free_store(struct Goods** store){
 struct Order* create_order(int arrival_time, char* recipe, int quantity){
     struct Order* new_order = (struct Order*)malloc(sizeof(struct Order));
 
-    // Controllo se l'allocazione di memoria è andata a buon fine
-    if (new_order == NULL) {
-        // Gestione dell'errore di allocazione della memoria
-        printf("Errore: allocazione della memoria fallita\nFunzione: create_order()\n");
-        exit(EXIT_FAILURE);
-    }
-
     new_order->arrival_time = arrival_time;
     strcpy(new_order->recipe, recipe);
     new_order->quantity = quantity;
@@ -483,10 +423,6 @@ struct Order* create_order(int arrival_time, char* recipe, int quantity){
 
 //* Inserimento fatto a partire dalla testa, ma seguendo un ordine descrescente di arrival_time
 void insert_order(struct Order** head, struct Order** tail, struct Order* new_order){
-    if(new_order == NULL){
-        printf("Errore: si vuole inserire un nodo NULL\n");
-        exit(EXIT_FAILURE);
-    }
 
     if(*head == NULL || *tail == NULL){ // lista vuota
         *head = new_order;
@@ -531,10 +467,6 @@ int search_recipe_orders(struct Order* head, char* name){
 }
 
 struct Order* remove_order(struct Order** head, struct Order** tail, struct Order* order_to_remove){
-    if(order_to_remove == NULL || *head == NULL || *tail == NULL){
-        printf("Errore: si vuole rimuovere un nodo NULL\n");
-        exit(EXIT_FAILURE);
-    }
 
     if(*head == order_to_remove){ // se devo eliminare la testa
         *head = order_to_remove->next;
@@ -695,10 +627,6 @@ int calculate_order_weight(struct Recipe** recipe_book, char* recipe_name, int o
 }
 
 void insert_truck(struct Recipe** recipe_book, struct Order** head, struct Order** tail, struct Order* new_order, int order_weight){
-    if(new_order == NULL){
-        printf("Errore: si vuole inserire un nodo NULL\n");
-        exit(EXIT_FAILURE);
-    }
 
     if(*head == NULL || *tail == NULL){ // lista vuota
         *head = new_order;
@@ -782,7 +710,6 @@ void remove_recipe(struct Recipe** recipe_book, struct Order* prepared_orders_he
                 return;
             }else{
                 free_recipe(recipe_book, name);
-                recipes_counter--;
                 printf("rimossa\n");
             }
         }
@@ -824,11 +751,6 @@ void order(struct Recipe** recipe_book, struct Goods** store, struct Order** pre
             }else{ // la ricetta è presente
                 struct Order* new_order = create_order(time, name, quantity);
 
-                if(recipe == NULL){
-                    printf("Errore: si vuole fare l'ordine di una ricetta che è NULL\n");
-                    exit(EXIT_FAILURE);
-                }
-
                 order_preparation(recipe, store, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, new_order, time);
 
                 printf("accettato\n");
@@ -860,14 +782,6 @@ void truck(struct Recipe** recipe_book, struct Order** prepared_orders_head, str
     if(truck_head == NULL){
         printf("camioncino vuoto\n");
     }else{
-        // struct Order* current = truck_head;
-        // printf("LISTA TRUCK:");
-        // while(current != NULL){
-        //     printf("%d %s %d -> ", current->arrival_time, current->recipe, current->quantity);
-        //     current = current->next;
-        // }
-        // printf("\n");
-
         while(truck_head != NULL){
             printf("%d %s %d\n", truck_head->arrival_time, truck_head->recipe, truck_head->quantity);
             delete_order(&truck_head, &truck_tail, truck_head);
@@ -875,85 +789,6 @@ void truck(struct Recipe** recipe_book, struct Order** prepared_orders_head, str
     }
 
     free_orders(&truck_head, &truck_tail);
-}
-
-
-
-//! FUNZIONI PER DEBUGGING
-void print_ingredients_list(struct Ingredient* head){
-    struct Ingredient* current = head;
-    printf("Ingredienti: ");
-    while(current != NULL){
-        printf("%s, %d  -  ", current->name, current->quantity);
-        current = current->next;
-    }
-    printf("\n");
-}
-
-void print_recipe_book(struct Recipe** recipe_book){
-    struct Recipe* current = NULL;
-    printf("-------------------\nTABELLA RICETTE:\n");
-    for (int i = 0; i < RECIPE_BOOK_SIZE; i++){
-        if (recipe_book[i]){
-            current = recipe_book[i];
-            while(current != NULL){
-                printf("Index: %d, Key: %d, Value: %s\n", i, current->key, current->name);
-                print_ingredients_list(current->ingredients_head);
-                current = current->next_recipe;
-            }
-        }
-    }
-    printf("-------------------\n");
-}
-
-void print_batch(struct Goods* goods){
-    printf("Lotti: ");
-    struct Batch* current = goods->batches_head;
-    while(current != NULL){
-        printf("Quantity: %d, Expiration: %d  -  ", current->quantity, current->expiration);
-        current = current->next;
-    }   
-    printf("\n");
-}
-
-void print_store(struct Goods** store){
-    if(store == NULL){
-        return;
-    }
-
-    printf("-------------------\nTABELLA MAGAZZINO:\n");
-    for (int i = 0; i < STORE_SIZE; i++){
-        if (store[i] != NULL){
-            printf("Index: %d, Key: %d, Name: %s, Quantity:%d\n", i, store[i]->key, store[i]->name, store[i]->total_quantity);
-            print_batch(store[i]);
-        }
-    }
-    printf("-------------------\n");
-}
-
-void print_order(struct Order* prepared_orders_head, struct Order* pending_orders_head){
-    struct Order* current = prepared_orders_head;
-
-    printf("-------------------\nTABELLA ORDINI:\nOrdini pronti: ");
-    while(current != NULL){
-        printf("Name: %s, Quantity: %d, Time: %d -> ", current->recipe, current->quantity, current->arrival_time);
-        current = current->next;
-    }
-
-    current = pending_orders_head;
-
-    printf("\nOrdini in attesa: ");
-    while(current != NULL){
-        printf("Name: %s, Quantity: %d, Time: %d -> ", current->recipe, current->quantity, current->arrival_time);
-        current = current->next;
-    }
-    printf("\n-------------------\n");
-}
-
-void print_data(struct Recipe** recipe_book, struct Goods** store, struct Order* prepared_orders_head, struct Order* pending_orders_head){
-    print_recipe_book(recipe_book);
-    print_store(store);
-    print_order(prepared_orders_head, pending_orders_head);
 }
 
 
@@ -1011,12 +846,8 @@ int main(){
             }
         }
 
-        // Stampa per debugging
-        // print_data(recipe_book, store, prepared_orders_head, pending_orders_head);
-        // Spedizione ordini
         time++;
         if(time % courier_period == 0){ // verifico se devo caricare il camion con gli ordini terminati
-            // printf("SPEDIZIONE ALL'ISTANTE DI TEMPO: %d\n", time);
             truck(recipe_book, &prepared_orders_head, &prepared_orders_tail, courier_capacity);
         }
     }
