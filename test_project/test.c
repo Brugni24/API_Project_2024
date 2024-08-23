@@ -4,7 +4,7 @@
 
 #define MAX_LEN 50
 #define RECIPE_BOOK_SIZE 499979
-#define STORE_SIZE 500
+#define STORE_SIZE 503
 #define STORE_PRIME 499 // numero primo per la funzione hash 2
 
 int recipes_counter = 0;
@@ -18,7 +18,6 @@ struct Ingredient{
 };
 
 struct Recipe{
-    int key;
     char name[MAX_LEN];
     struct Ingredient* ingredients_head;
     struct Recipe* next_recipe;
@@ -31,7 +30,6 @@ struct Batch{ // lotti
 };
 
 struct Goods{ // merce presente nel magazzino -> ingredienti
-    int key;
     char name[MAX_LEN];
     int total_quantity;
     struct Batch* batches_head;
@@ -142,7 +140,6 @@ struct Recipe* create_recipe(char* name, struct Ingredient* ingredients_head){
         exit(EXIT_FAILURE);
     }
     
-    recipe->key = key_function(name);
     strcpy(recipe->name, name);
     recipe->ingredients_head = ingredients_head;
     recipe->next_recipe = NULL;
@@ -356,7 +353,6 @@ struct Goods* create_goods(char* name){
         exit(EXIT_FAILURE);
     }
 
-    goods->key = key_function(name);
     strcpy(goods->name, name);
     goods->total_quantity = 0;
     goods->batches_head = NULL;
@@ -897,7 +893,7 @@ void print_recipe_book(struct Recipe** recipe_book){
         if (recipe_book[i]){
             current = recipe_book[i];
             while(current != NULL){
-                printf("Index: %d, Key: %d, Value: %s\n", i, current->key, current->name);
+                printf("Index: %d, Value: %s\n", i, current->name);
                 print_ingredients_list(current->ingredients_head);
                 current = current->next_recipe;
             }
@@ -924,7 +920,7 @@ void print_store(struct Goods** store){
     printf("-------------------\nTABELLA MAGAZZINO:\n");
     for (int i = 0; i < STORE_SIZE; i++){
         if (store[i] != NULL){
-            printf("Index: %d, Key: %d, Name: %s, Quantity:%d\n", i, store[i]->key, store[i]->name, store[i]->total_quantity);
+            printf("Index: %d, Name: %s, Quantity:%d\n", i, store[i]->name, store[i]->total_quantity);
             print_batch(store[i]);
         }
     }
