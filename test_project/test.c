@@ -33,9 +33,9 @@ struct Goods{ // merce presente nel magazzino -> ingredienti
 };
 
 struct Order{
+    struct Recipe* recipe_ptr;
     int arrival_time;
     int quantity;
-    char recipe[MAX_LEN];
     struct Order* next;
     struct Order* prev;
 };
@@ -409,11 +409,11 @@ void free_recipe_book(struct Recipe** recipe_book){
 
 
 //! FUNZIONI DI GESTIONE DEGLI ORDINI
-struct Order* create_order(int arrival_time, char* recipe, int quantity){
+struct Order* create_order(struct Recipe* recipe_ptr, int arrival_time, int quantity){
     struct Order* new_order = (struct Order*)malloc(sizeof(struct Order));
 
+    new_order->recipe_ptr = recipe_ptr;
     new_order->arrival_time = arrival_time;
-    strcpy(new_order->recipe, recipe);
     new_order->quantity = quantity;
     new_order->next = NULL;
     new_order->prev = NULL;
@@ -453,11 +453,11 @@ void insert_order(struct Order** head, struct Order** tail, struct Order* new_or
     }
 }
 
-int search_recipe_orders(struct Order* head, char* name){
+int search_recipe_orders(struct Order* head, struct Recipe* recipe){
     struct Order* current = head;
 
     while(current != NULL){
-        if(strcmp(current->recipe, name) == 0){
+        if(current->recipe_ptr == recipe){
             return 1;
         }
         current = current->next;
@@ -562,7 +562,7 @@ void remove_consumed_batch(struct Recipe* recipe, int order_quantity){
 }
 
 //* Arrivano gli ordini nuovi e vengono smistati a seconda che si possano preparare oppure no
-void order_preparation(struct Recipe* recipe , struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, struct Order* new_order, int arrival_time){
+void order_preparation(struct Recipe* recipe, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, struct Order* new_order, int arrival_time){
     // Controllo se gli ingredienti sono sufficienti
     if(check_ingredients_availability(recipe, new_order->quantity, new_order->arrival_time)){ // ci sono ingredienti a sufficienza per preparare l'ordine
         insert_order(prepared_orders_head, prepared_orders_tail, new_order);
@@ -575,18 +575,15 @@ void order_preparation(struct Recipe* recipe , struct Order** prepared_orders_he
 }
 
 //* Viene chiamata al momento di un rifornimento e verifica se ci sono ordini in attesa che possono essere evasi
-void prepare_pending_order(struct Recipe** recipe_book, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, int current_time){
-    struct Recipe* recipe = NULL;
+void prepare_pending_order(struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, int current_time){
     struct Order* current = *pending_orders_tail;
     struct Order* temp = NULL;
 
     while(current != NULL){ // scorro la lista dalla coda per trovare il più vecchio ordine che posso evadere
-        recipe = search_recipe(recipe_book, current->recipe);
-
         // Controllo se l'ordine corrente può essere evaso
-        if(check_ingredients_availability(recipe, current->quantity, current_time)){
+        if(check_ingredients_availability(current->recipe_ptr, current->quantity, current_time)){
             // elimino gli ingredienti usati
-            remove_consumed_batch(recipe, current->quantity);
+            remove_consumed_batch(current->recipe_ptr, current->quantity);
 
             // valorizzo temp e incremento current
             temp = current;
@@ -604,12 +601,12 @@ void prepare_pending_order(struct Recipe** recipe_book, struct Order** prepared_
 
 
 //! FUNZIONI DI GESTIONE DELLA SPEDIZIONE
-int calculate_order_weight(struct Recipe** recipe_book, char* recipe_name, int order_quantity){
+int calculate_order_weight(struct Order* order){
     int order_weight = 0;
-    struct Ingredient* current_ingredient = search_recipe(recipe_book, recipe_name)->ingredients_head;
+    struct Ingredient* current_ingredient = order->recipe_ptr->ingredients_head;
 
     while(current_ingredient != NULL){
-        order_weight += order_quantity * current_ingredient->quantity;
+        order_weight += order->quantity * current_ingredient->quantity;
         current_ingredient = current_ingredient->next;
     }
 
@@ -624,7 +621,7 @@ void insert_truck(struct Recipe** recipe_book, struct Order** head, struct Order
     }else{ // aggiungi in ordine di peso dell'ordine
         struct Order* current = *head;
 
-        while(current != NULL && order_weight <= calculate_order_weight(recipe_book, current->recipe, current->quantity)){
+        while(current != NULL && order_weight <= calculate_order_weight(current)){
             current = current->next;
         }
 
@@ -690,12 +687,14 @@ void read_recipe(struct Recipe** recipe_book, struct Goods** store){
 
 void remove_recipe(struct Recipe** recipe_book, struct Order* prepared_orders_head, struct Order* pending_orders_head){
     char name[MAX_LEN] = "";
+    struct Recipe* recipe = NULL;
 
     if(scanf("%s", name) > 0 ){ // leggo il nome della ricetta
-        if(search_recipe(recipe_book, name) == NULL){ // la ricetta non è presente nel ricettario
+        recipe = search_recipe(recipe_book, name);
+        if(recipe == NULL){ // la ricetta non è presente nel ricettario
             printf("non presente\n");
         }else{ // la ricetta è presente
-            if(search_recipe_orders(prepared_orders_head, name) || search_recipe_orders(pending_orders_head, name)){  // è presente un ordine con la ricetta in questione
+            if(search_recipe_orders(prepared_orders_head, recipe) || search_recipe_orders(pending_orders_head, recipe)){  // è presente un ordine con la ricetta in questione
                 printf("ordini in sospeso\n");
                 return;
             }else{
@@ -731,15 +730,16 @@ void rifornimento(struct Goods** store, int time){
 void order(struct Recipe** recipe_book, struct Goods** store, struct Order** prepared_orders_head, struct Order** prepared_orders_tail, struct Order** pending_orders_head, struct Order** pending_orders_tail, int time){ // legge nome della ricetta e la quantità da preparare
     char name[MAX_LEN] = "";
     int quantity = 0;
+    struct Recipe* recipe = NULL;
 
     if(scanf("%s", name) > 0 ){ // leggo il nome della ricetta dell'ordine
         if(scanf("%d", &quantity) > 0){
-            struct Recipe* recipe = search_recipe(recipe_book, name);
+            recipe = search_recipe(recipe_book, name);
 
             if(recipe == NULL){ // la ricetta non è presente
                 printf("rifiutato\n");
             }else{ // la ricetta è presente
-                struct Order* new_order = create_order(time, name, quantity);
+                struct Order* new_order = create_order(recipe, time, quantity);
 
                 order_preparation(recipe, prepared_orders_head, prepared_orders_tail, pending_orders_head, pending_orders_tail, new_order, time);
 
@@ -757,7 +757,7 @@ void truck(struct Recipe** recipe_book, struct Order** prepared_orders_head, str
 
     while(*prepared_orders_tail != NULL && *prepared_orders_head != NULL && capacity > 0){
         // calcolo il peso dell'ordine
-        order_weight = calculate_order_weight(recipe_book, (*prepared_orders_tail)->recipe, (*prepared_orders_tail)->quantity);
+        order_weight = calculate_order_weight(*prepared_orders_tail);
 
         if(order_weight <= capacity){
             capacity -= order_weight;
@@ -773,7 +773,7 @@ void truck(struct Recipe** recipe_book, struct Order** prepared_orders_head, str
         printf("camioncino vuoto\n");
     }else{
         while(truck_head != NULL){
-            printf("%d %s %d\n", truck_head->arrival_time, truck_head->recipe, truck_head->quantity);
+            printf("%d %s %d\n", truck_head->arrival_time, truck_head->recipe_ptr->name, truck_head->quantity);
             delete_order(&truck_head, &truck_tail, truck_head);
         }
     }
@@ -826,7 +826,7 @@ int main(){
             }else{
                 if(strcmp(comando, "rifornimento") == 0){
                     rifornimento(store, time);
-                    prepare_pending_order(recipe_book, &prepared_orders_head, &prepared_orders_tail, &pending_orders_head, &pending_orders_tail, time); // dopo ogni rifornimento devo verificare se gli ordini in attesa possono essere evasi
+                    prepare_pending_order(&prepared_orders_head, &prepared_orders_tail, &pending_orders_head, &pending_orders_tail, time); // dopo ogni rifornimento devo verificare se gli ordini in attesa possono essere evasi
                 }
                 else{
                     if(strcmp(comando, "ordine") == 0){
