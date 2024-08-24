@@ -83,21 +83,13 @@ struct Ingredient* search_ingredient(struct Ingredient* ingredients_head, char* 
 }
 
 void insert_ingredient(struct Ingredient** ingredients_head, char* name, int quantity){
-    // cerco se l'ingrediente è già presente
-    struct Ingredient* temp = search_ingredient(*ingredients_head, name);
-
-    if(temp == NULL){ // ingrediente non presente
-        // creo il nodo
-        struct Ingredient* new_ingredient = create_ingredient(name, quantity);
-        
-        if(*ingredients_head == NULL){ // lista vuota
-            *ingredients_head = new_ingredient;
-        }else{ // aggiungo ingrediente in testa
-            new_ingredient->next = *ingredients_head;
-            *ingredients_head = new_ingredient;
-        }
-    }else{ // ingrediente già presente -> aumento la quantità senza aggiungere un nuovo nodo
-        temp->quantity += quantity;
+    struct Ingredient* new_ingredient = create_ingredient(name, quantity);
+    
+    if(*ingredients_head == NULL){ // lista vuota
+        *ingredients_head = new_ingredient;
+    }else{ // aggiungo ingrediente in testa
+        new_ingredient->next = *ingredients_head;
+        *ingredients_head = new_ingredient;
     }
 }
 
